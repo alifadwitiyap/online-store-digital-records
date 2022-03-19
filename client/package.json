@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "react": "^17.0.2",
@@ -13,6 +14,12 @@
   },
   "devDependencies": {
     "babel-preset-nano-react-app": "^0.1.0",
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "vite": "^2.6.7"
   },
   "babel": {
