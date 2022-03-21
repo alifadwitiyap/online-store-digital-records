@@ -1,6 +1,7 @@
 import React from 'react';
-import { FaBook } from 'react-icons/fa';
+import { FaBook, FaChartBar } from 'react-icons/fa';
 import Button from './components/Button';
+import CardSelection from './components/CardSelection';
 import MenuSelection from './components/MenuSelection';
 import './index.css';
 
@@ -11,6 +12,7 @@ function App() {
       <p className="test">Hard to get more minimal than this React app.</p>
       <Button>Hello, world</Button>
       <MenuSelection icon={<FaBook />} text="Input Barang Baru" />
+      <CardSelection icon={<FaChartBar />} text="Keuntungan Bersih" />
     </>
   );
 }
