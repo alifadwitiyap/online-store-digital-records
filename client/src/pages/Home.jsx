@@ -41,7 +41,7 @@ function Home() {
     <>
       <Help />
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
-        <div className="w-1/4 mb-6">
+        <div className="w-4/5 lg:w-1/4 mb-6">
           <Title size="4xl">Selamat Datang di Digital Records</Title>
         </div>
         {selections.map(({ icon, text }) => (
