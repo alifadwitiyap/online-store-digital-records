@@ -14,8 +14,8 @@ function Home() {
         <div className="w-4/5 lg:w-1/4 mb-6">
           <Title size="4xl">Selamat Datang di Digital Records</Title>
         </div>
-        {navSelections.map(({ icon, text }) => (
-          <MenuSelection key={text} icon={icon} text={text} />
+        {navSelections.map(({ icon, text, path }) => (
+          <MenuSelection key={text} icon={icon} text={text} path={path} />
         ))}
       </div>
     </>

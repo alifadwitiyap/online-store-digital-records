@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FaChevronRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-function MenuSelection({ text, icon, onClickHandler }) {
+function MenuSelection({ text, icon, path }) {
   const className = 'bg-fuchsia-600 w-4/5 lg:w-1/3 p-3 text-lg text-white rounded hover:bg-fuchsia-800';
   return (
-    <button type="button" className={className} onClick={() => onClickHandler()}>
+    <Link to={path} className={className}>
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <div className="mr-3">{icon}</div>
@@ -13,18 +14,14 @@ function MenuSelection({ text, icon, onClickHandler }) {
         </div>
         <FaChevronRight />
       </div>
-    </button>
+    </Link>
   );
 }
-
-MenuSelection.defaultProps = {
-  onClickHandler: () => {},
-};
 
 MenuSelection.propTypes = {
   text: PropTypes.string.isRequired,
   icon: PropTypes.element.isRequired,
-  onClickHandler: PropTypes.func,
+  path: PropTypes.string.isRequired,
 };
 
 export default MenuSelection;
