@@ -7,8 +7,7 @@ import SidebarSelection from './SidebarSelection';
 import navSelections from '../data/navSelections';
 
 function Sidebar() {
-  // !change this back to false
-  const [isOpened, setIsOpened] = useState(true);
+  const [isOpened, setIsOpened] = useState(false);
 
   let className = 'relative z-10 h-screen w-64 p-4 bg-fuchsia-600 shadow-md ease-in-out duration-300';
   className = `${className} ${isOpened ? 'translate-x-0' : '-translate-x-full'}`;
