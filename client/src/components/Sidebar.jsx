@@ -9,14 +9,14 @@ import navSelections from '../data/navSelections';
 function Sidebar() {
   const [isOpened, setIsOpened] = useState(false);
 
-  let className = 'relative z-10 h-screen w-64 p-4 bg-fuchsia-600 shadow-md ease-in-out duration-300';
+  let className = 'relative z-10 h-screen w-64 p-4 bg-purple-600 shadow-md ease-in-out duration-300';
   className = `${className} ${isOpened ? 'translate-x-0' : '-translate-x-full'}`;
 
   return (
     <div className="fixed">
       <div className="relative">
         <AiOutlineMenu
-          className="absolute text-4xl top-4 left-4 text-fuchsia-600 hover:text-fuchsia-800 hover:cursor-pointer"
+          className="absolute text-4xl top-4 left-4 text-purple-600 hover:text-purple-800 hover:cursor-pointer"
           onClick={() => setIsOpened(true)}
         />
         <div className={className}>
@@ -33,7 +33,7 @@ function Sidebar() {
             </div>
           </div>
           <br />
-          <Link to="/login" className="text-white m-2 p-2 border rounded hover:bg-fuchsia-700">Logout</Link>
+          <Link to="/login" className="text-white m-2 p-2 border rounded hover:bg-purple-700">Logout</Link>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function CardSelection({ icon, text, onClickHandler }) {
-  const className = 'bg-fuchsia-600 p-2 text-white rounded hover:bg-fuchsia-800';
+  const className = 'bg-purple-600 p-2 text-white rounded hover:bg-purple-800';
   return (
     <button type="button" className={className} onClick={() => onClickHandler()}>
       <div className="w-56 px-6 py-10 max-w-sm flex flex-col items-center">
