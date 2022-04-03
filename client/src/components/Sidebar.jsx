@@ -25,9 +25,9 @@ function Sidebar() {
             onClick={() => setIsOpened(false)}
           />
           <div className="mt-14 flex flex-col items-center">
-            <Title color="white">Online Store Digital Records</Title>
+            <Title className="text-xl text-white">Online Store Digital Records</Title>
             <BsPersonCircle className="text-white text-8xl my-4" />
-            <Title color="white">Owner</Title>
+            <Title className="text-xl text-white">Owner</Title>
             <div className="mt-8 h-80 overflow-y-scroll no-scrollbar">
               {navSelections.map(({ text, path }) => <SidebarSelection text={text} path={path} />)}
             </div>
