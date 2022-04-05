@@ -12,7 +12,7 @@ exports.up = pgm => {
             notNull:true
         },        
         password:{
-            type: 'VARCHAR(30)',
+            type: 'TEXT',
             notNull:true
         },
         nama:{
