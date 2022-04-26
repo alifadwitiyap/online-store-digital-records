@@ -2,28 +2,28 @@
 
 
 exports.up = pgm => {
-    pgm.createTable('pembelian_barang',{
-        id_pembelian:{
+    pgm.createTable('pembelian_barang', {
+        id_pembelian: {
             type: 'VARCHAR(36)',
             primaryKey: true
         },
-        id_barang:{
+        id_barang: {
             type: 'VARCHAR(30)',
             references: 'barang',
             onDelete: 'cascade',
-            notNull:true
-        },        
-        harga_beli:{
-            type: 'INTEGER',
-            notNull:true
+            notNull: true
         },
-        jumlah_dibeli:{
+        harga_beli: {
             type: 'INTEGER',
-            notNull:true
+            notNull: true
         },
-        tanggal_beli:{
+        jumlah_dibeli: {
+            type: 'INTEGER',
+            notNull: true
+        },
+        tanggal_beli: {
             type: 'DATE',
-            notNull:true
+            notNull: true
         }
     })
 };

@@ -1,19 +1,31 @@
-require('dotenv').config()
 const colors = require('colors');
 const express = require('express')
 const morgan = require('morgan')
+const usersRouter = require('./router/usersRouter');
+const barangRouter = require('./router/barangRouter');
+const errorHandler = require('./middleware/errorHandler');
+require('dotenv').config()
 
-const app= express()
+
+const app = express()
 const PORT = process.env.PORT || 5000
 
 
 
 
-
+//read json
 app.use(express.json())
 
-if (process.env.NODE_ENV === 'development'){
-    app.use(morgan(`dev`))
+// log req information
+if (process.env.NODE_ENV === 'development') {
+        app.use(morgan(`dev`))
 }
 
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.bgBrightYellow.bold))
+//router
+app.use('/users', usersRouter)
+app.use('/barang', barangRouter)
+app.use(errorHandler)
+
+
+//main run server
+app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold))

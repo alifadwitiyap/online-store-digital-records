@@ -2,28 +2,29 @@
 
 
 exports.up = pgm => {
-    pgm.createTable('akun',{
-        id_akun:{
+    pgm.createTable('akun', {
+        id_akun: {
             type: 'VARCHAR(36)',
             primaryKey: true
         },
-        username:{
+        username: {
             type: 'VARCHAR(30)',
-            notNull:true
-        },        
-        password:{
+            notNull: true,
+            unique: true
+        },
+        password: {
             type: 'TEXT',
-            notNull:true
+            notNull: true
         },
-        nama:{
+        nama: {
             type: 'VARCHAR(30)',
-            notNull:true
+            notNull: true
         },
-        role:{
+        role: {
             type: 'VARCHAR(30)',
-            notNull:true
+            notNull: true
         },
-        
+
     })
 };
 

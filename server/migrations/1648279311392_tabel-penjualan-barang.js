@@ -1,29 +1,29 @@
-    /* eslint-disable camelcase */
+/* eslint-disable camelcase */
 
 
 exports.up = pgm => {
-    pgm.createTable('penjualan_barang',{
-        id_penjualan:{
+    pgm.createTable('penjualan_barang', {
+        id_penjualan: {
             type: 'VARCHAR(36)',
             primaryKey: true
         },
-        id_barang:{
+        id_barang: {
             type: 'VARCHAR(30)',
             references: 'barang',
             onDelete: 'cascade',
-            notNull:true
-        },        
-        harga_jual:{
-            type: 'INTEGER',
-            notNull:true
+            notNull: true
         },
-        jumlah_dijual:{
+        harga_jual: {
             type: 'INTEGER',
-            notNull:true
+            notNull: true
         },
-        tanggal_jual:{
+        jumlah_dijual: {
+            type: 'INTEGER',
+            notNull: true
+        },
+        tanggal_jual: {
             type: 'DATE',
-            notNull:true
+            notNull: true
         }
     })
 };

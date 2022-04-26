@@ -2,22 +2,26 @@
 
 
 exports.up = pgm => {
-    pgm.createTable('barang',{
-        id_barang:{
+    pgm.createTable('barang', {
+        id_barang: {
             type: 'VARCHAR(36)',
-            primaryKey: true
+            primaryKey: true,
+            unique: true
         },
-        nama:{
+        nama: {
             type: 'VARCHAR(30)',
-            notNull:true
-        },        
-        supplier:{
-            type: 'VARCHAR(30)',
-            notNull:true
+            notNull: true
         },
-        jumlah:{
+        supplier: {
+            type: 'VARCHAR(30)',
+            notNull: true
+        },
+        jumlah: {
             type: 'INTEGER',
-            notNull:true
+            notNull: true
+        },
+        score: {
+            type: 'INTEGER',
         },
     })
 };
