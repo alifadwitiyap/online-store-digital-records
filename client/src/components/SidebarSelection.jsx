@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function SidebarSelection({ text, path }) {
   return (
     <Link
-      className="block p-2 text-white rounded hover:bg-fuchsia-700"
+      className="block p-2 text-white rounded hover:bg-purple-700"
       to={path}
     >
       {text}

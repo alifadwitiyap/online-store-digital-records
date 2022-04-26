@@ -1,23 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Title({ children, size, color }) {
+function Title({ children, className }) {
   return (
-    <h1 className={`font-bold text-center text-${size} text-${color}`}>
+    <h1 className={`font-bold text-center ${className}`}>
       {children}
     </h1>
   );
 }
 
 Title.defaultProps = {
-  size: 'xl',
-  color: 'black',
+  className: 'text-xl text-black',
 };
 
 Title.propTypes = {
   children: PropTypes.string.isRequired,
-  size: PropTypes.string,
-  color: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default Title;
