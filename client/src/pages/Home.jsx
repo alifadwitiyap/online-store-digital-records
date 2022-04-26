@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Title from '../components/Title';
 import Help from '../components/Help';
 import MenuSelection from '../components/MenuSelection';
 import Sidebar from '../components/Sidebar';
 import navSelections from '../data/navSelections';
+import useAuth from '../utils/useAuth';
 
 function Home() {
+  const [auth, isAuthenticated] = useAuth();
+
+  useEffect(() => {
+    auth();
+    if (!isAuthenticated) return;
+
+    console.log('masuk');
+  }, []);
+
   return (
     <>
       <Help />
