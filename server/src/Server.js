@@ -4,14 +4,15 @@ const morgan = require('morgan')
 const usersRouter = require('./router/usersRouter');
 const barangRouter = require('./router/barangRouter');
 const errorHandler = require('./middleware/errorHandler');
+const cors = require('cors');
 require('dotenv').config()
 
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
-
-
+//cors
+app.use(cors());
 
 //read json
 app.use(express.json())
