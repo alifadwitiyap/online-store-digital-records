@@ -7,16 +7,16 @@ const router = express.Router()
 
 router
     .route('/inputBarang')
-    .post(handler.postInputBarang)
+    .post(protect, handler.postInputBarang)
 
 router
     .route('/biayaOperasional')
-    .post(handler.postBiayaOperasional)
+    .post(protect, handler.postBiayaOperasional)
 
 router
     .route('/Penjualan')
-    .post(handler.postInputPenjualan)
-    .get(handler.getAllPenjualanBarangByDate)
+    .post(protect, handler.postInputPenjualan)
+    .get(protect, handler.getAllPenjualanBarangByDate)
 
 
 module.exports = router
