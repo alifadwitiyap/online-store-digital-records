@@ -4,16 +4,18 @@ import { useNavigate } from 'react-router-dom';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { user } = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+  // TODO: add role checking
+
   const auth = useCallback(() => {
-    if (!user) {
+    if (!token) {
       navigate('/login');
     } else {
       setIsAuthenticated(true);
     }
-  }, [navigate, user]);
+  }, [navigate, token]);
 
   return [auth, isAuthenticated];
 };
