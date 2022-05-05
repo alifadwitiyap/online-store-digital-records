@@ -45,9 +45,9 @@ function Login() {
         {errorForm && <p className="text-red-600 text-center text-sm">{errorForm}</p>}
         <div className="flex flex-col items-center mt-12">
           {loading ? (
-            <button type="button" className="bg-purple-600 py-2 px-6 text-white rounded hover:bg-purple-800">loading...</button>
+            <button type="button" className="btn">loading...</button>
           ) : (
-            <button type="submit" className="bg-purple-600 py-2 px-6 text-white rounded hover:bg-purple-800">Masuk</button>
+            <button type="submit" className="btn">Masuk</button>
           )}
         </div>
       </form>

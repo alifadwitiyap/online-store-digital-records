@@ -21,6 +21,10 @@ body {
 }
 
 @layer components {
+  .btn {
+    @apply bg-purple-600 py-2 px-6 text-white rounded hover:bg-purple-800;
+  }
+
   .input-field {
     @apply appearance-none relative block w-full px-3 py-2 border-b-2 border-gray-400 placeholder-gray-400 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm;
   }
