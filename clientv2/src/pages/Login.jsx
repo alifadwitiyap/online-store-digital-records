@@ -36,8 +36,12 @@ function Login() {
       </Title>
       <form onSubmit={handleSubmit(onSubmit)} className="py-16 px-8 w-1/4 min-w-fit rounded-md bg-white my-6">
         <Title className="text-black text-xl mb-4">Masuk</Title>
-        <input {...register('username')} type="text" className="input-field" placeholder="Username" />
-        <input {...register('password')} type="password" className="input-field" placeholder="Password" />
+        <div className="mb-7">
+          <input {...register('username')} type="text" className="input-field" placeholder="Username" />
+        </div>
+        <div className="mb-7">
+          <input {...register('password')} type="password" className="input-field" placeholder="Password" />
+        </div>
         {errorForm && <p className="text-red-600 text-center text-sm">{errorForm}</p>}
         <div className="flex flex-col items-center mt-12">
           {loading ? (
