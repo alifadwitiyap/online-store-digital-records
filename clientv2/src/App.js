@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import InputBarangBaru from './pages/InputBarangBaru';
 import InputBarangTerjual from './pages/InputBarangTerjual';
+import InputBiayaOperasional from './pages/InputBiayaOperasional';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/input-barang-baru" element={<InputBarangBaru />} />
           <Route path="/input-barang-jual" element={<InputBarangTerjual />} />
+          <Route path="/input-biaya-operasional" element={<InputBiayaOperasional />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
