@@ -8,6 +8,7 @@ import { convertDateToString } from '../utils/dateConversion';
 import Axios from '../utils/axios';
 import { useSelector } from 'react-redux';
 import { notifyError, notifySuccess } from '../utils/notify';
+import BackToMenu from '../components/BackToMenu';
 
 function InputBarangBaru() {
   const [auth, isAuthenticated] = useAuth();
@@ -151,6 +152,7 @@ function InputBarangBaru() {
               </button>
             )}
           </form>
+          <BackToMenu />
         </div>
       </div>
     </>
