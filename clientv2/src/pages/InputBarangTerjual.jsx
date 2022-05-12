@@ -63,7 +63,7 @@ function InputBarangTerjual() {
       <Sidebar />
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
         <div className="w-4/5 lg:w-1/4 mb-6">
-          <Title className="text-2xl text-black mb-8">Input Barang Baru</Title>
+          <Title className="text-2xl text-black mb-8">Input Barang Terjual</Title>
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <div className="mb-4 w-full">
               <label className="block mb-1">
