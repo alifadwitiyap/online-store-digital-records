@@ -30,9 +30,12 @@ function InputBarangBaru() {
   }, [auth, isAuthenticated]);
 
   const onFieldChange = (e) => {
+    let val = e.target.value;
+    if (e.target.type === 'number') val = parseInt(val);
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: val,
     }));
   };
 
