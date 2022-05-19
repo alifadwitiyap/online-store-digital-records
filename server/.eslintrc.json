@@ -1,0 +1,38 @@
+{
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "plugins": [
+        "filenames"
+    ],
+    "extends": ["eslint:recommended"],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "ignorePatterns": ["**/migrations"],
+    "rules": {
+        "indent": [
+            "error",
+            "tab"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "filenames/match-exported": [ 2, "pascal" ],
+        "new-cap": ["error", { "newIsCap": true }],
+        "no-confusing-arrow": [
+            "error",
+            { "allowParens": true, "onlyOneSimpleParam": false }
+        ],
+        "object-shorthand": ["error", "always"],
+        "no-var": "error",
+        "quote-props": ["error", "as-needed"],
+        "no-duplicate-imports": "error",
+        "no-else-return": "error", 
+        "prefer-template": "error", 
+        "prefer-destructuring": ["error", {"object": true, "array": true}]
+    }
+}

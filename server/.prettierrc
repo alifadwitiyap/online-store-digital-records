@@ -1,0 +1,11 @@
+{
+    "trailingComma": "none",
+    "tabWidth": 4,
+    "useTabs":true,
+    "Semicolons":true,
+    "Arrow Function Parentheses":true,
+    "singleQuote":false,
+    "printWidth": 110,
+    "Prose Wrap":"preserve"
+
+}
