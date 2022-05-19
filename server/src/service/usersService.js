@@ -1,85 +1,79 @@
-const { Pool } = require('pg')
-const { nanoid } = require('nanoid');
-const bcrypt = require('bcrypt');
-const errorResponse = require('../util/errorResponse');
-const jwt = require('jsonwebtoken');
+const { Pool } = require("pg");
+const { nanoid } = require("nanoid");
+const bcrypt = require("bcrypt");
+const ErrorResponse = require("../utils/ErrorResponse");
+const jwt = require("jsonwebtoken");
 const NodeCache = require("node-cache");
 
-class usersService {
+class UsersService {
+	static token = new NodeCache();
+	constructor() {
+		this._pool = new Pool({
+			connectionString: process.env.DATABASE_URL
+		});
+	}
 
-    static token = new NodeCache();
+	async registerUser({ username, password, nama, role }) {
+		const id = `user-${nanoid(16)}`;
+		const hashedPassword = await bcrypt.hash(password, 10);
 
-    constructor() {
-        this._pool = new Pool({
-            connectionString: process.env.DATABASE_URL
-        })
-    }
+		const query = {
+			text: "INSERT INTO akun VALUES($1, $2, $3, $4, $5) RETURNING *",
+			values: [id, username, hashedPassword, nama, role]
+		};
 
-    async registerUser({ username, password, nama, role }) {
-        const id = `user-${nanoid(16)}`
-        const hashedPassword = await bcrypt.hash(password, 10);
+		const result = await this._pool.query(query);
 
-        const query = {
-            text: 'INSERT INTO akun VALUES($1, $2, $3, $4, $5) RETURNING *',
-            values: [id, username, hashedPassword, nama, role],
-        };
+		const data = result.rows[0];
+		delete data.password;
 
-        const result = await this._pool.query(query);
+		return data;
+	}
 
-        const data = result.rows[0]
-        delete data.password
+	async deleteUser({ id }) {
+		const query = {
+			text: "DELETE FROM akun WHERE id_akun=$1 RETURNING id_akun",
+			values: [id]
+		};
 
-        return data
-    }
+		const result = await this._pool.query(query);
+		if (!result.rows.length) {
+			throw new ErrorResponse("ID tidak ditemukan", 404);
+		}
+	}
 
+	async loginUser({ username, password }) {
+		if (!username || !password) {
+			throw new ErrorResponse("Username atau password kosong", 400);
+		}
 
-    async deleteUser({ id }) {
-        const query = {
-            text: 'DELETE FROM akun WHERE id_akun=$1 RETURNING id_akun',
-            values: [id],
-        };
+		const query = {
+			text: "SELECT * from akun  where username=$1",
+			values: [username]
+		};
+		const result = await this._pool.query(query);
 
-        const result = await this._pool.query(query);
-        if (!result.rows.length) {
-            throw new errorResponse('ID tidak ditemukan', 404);
-        }
-    }
+		if (result.rows < 1) {
+			throw new ErrorResponse("Username tidak ditemukan", 404);
+		}
 
-    async loginUser({ username, password }) {
-        if (!username || !password) {
-            throw new errorResponse('Username atau password kosong', 400)
-        }
+		const data = result.rows[0];
+		const isMatch = await bcrypt.compare(password, data.password);
+		delete data.password;
 
-        const query = {
-            text: 'SELECT * from akun  where username=$1',
-            values: [username],
-        };
-        const result = await this._pool.query(query);
+		if (!isMatch) {
+			throw new ErrorResponse("Invalid credential", 401);
+		}
 
-        if (result.rows < 1) {
-            throw new errorResponse('Username tidak ditemukan', 404)
-        }
+		data.token = await jwt.sign({ id_akun: data.id_akun }, process.env.JWT_SECRET_KEY);
+		UsersService.token.set(data.token, true, 60 * 60);
 
-        const data = result.rows[0];
-        const isMatch = await bcrypt.compare(password, data.password);
-        delete data.password
+		return data;
+	}
 
-        if (!isMatch) {
-            throw new errorResponse('Invalid credential', 401)
-        }
-
-        data.token = await jwt.sign({ "id_akun": data.id_akun }, process.env.JWT_SECRET_KEY)
-        usersService.token.set(data.token, true, 60 * 60)
-
-        return data
-    }
-
-
-    async logoutUser({ authorization }) {
-        usersService.token.del(authorization.split(' ')[1])
-    }
+	async logoutUser({ authorization }) {
+		UsersService.token.del(authorization.split(" ")[1]);
+	}
 }
 
-
-module.exports = usersService
-
+module.exports = UsersService;

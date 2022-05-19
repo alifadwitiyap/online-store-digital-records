@@ -1,183 +1,244 @@
-const { Pool } = require('pg')
-const { nanoid } = require('nanoid');
-const errorResponse = require('../util/errorResponse');
+const { Pool } = require("pg");
+const { nanoid } = require("nanoid");
+const ErrorResponse = require("../utils/ErrorResponse");
 
-class barangService {
+class BarangService {
+	constructor() {
+		this._pool = new Pool({
+			connectionString: process.env.DATABASE_URL
+		});
+	}
+	// add barang
+	async inputBarangBaru({ tanggal, id_barang, nama, harga_beli_satuan, supplier, jumlah_dibeli }) {
+		if (!(await this._isBarangExist(id_barang))) {
+			const addBarangQuery = {
+				text: "INSERT INTO barang VALUES($1, $2, $3, $4, $5)",
+				values: [id_barang, nama, supplier, 0, 0]
+			};
+			await this._pool.query(addBarangQuery);
+		}
 
-    constructor() {
-        this._pool = new Pool({
-            connectionString: process.env.DATABASE_URL
-        })
-    }
+		// check apakan id barang telah digunakan
+		await this._cekKepemilikanID(id_barang, nama, supplier);
 
-    async inputBarangBaru({ tanggal, id_barang, nama, harga_beli, supplier, jumlah_dibeli }) {
-        if (! await this.IsBarangExist(id_barang)) {
-            let query = {
-                text: 'INSERT INTO barang VALUES($1, $2, $3, $4)',
-                values: [id_barang, nama, supplier, 0],
-            };
-            await this._pool.query(query);
-        }
+		// Tambah pembelian
+		const id_pembelian = `pembelian-${nanoid(16)}`;
+		const tambahPembelianQuery = {
+			text: "INSERT INTO pembelian_barang VALUES($1, $2, $3, $4, $5) ",
+			values: [id_pembelian, id_barang, harga_beli_satuan, jumlah_dibeli, tanggal]
+		};
+		await this._pool.query(tambahPembelianQuery);
 
-        //tambah pembelian
-        const id_pembelian = `pembelian-${nanoid(16)}`
-        const tambahPembelianQuery = {
-            text: 'INSERT INTO pembelian_barang VALUES($1, $2, $3, $4, $5) ',
-            values: [id_pembelian, id_barang, harga_beli, jumlah_dibeli, tanggal],
-        };
-        await this._pool.query(tambahPembelianQuery);
+		// Update jumlah barang
+		const jmlBarangSebelum = await this._checkJumlahBarang(id_barang);
+		const updatedJmlBarang = jmlBarangSebelum + jumlah_dibeli;
+		const result = await this._updateJmlBarang(updatedJmlBarang, id_barang);
 
-        //update jumlah barang
-        const updatedJmlBarang = await this.checkJumlahBarang(id_barang) + jumlah_dibeli
-        const updateBarangQuery = {
-            text: 'UPDATE barang SET jumlah = $1 WHERE id_barang = $2 RETURNING id_barang',
-            values: [updatedJmlBarang, id_barang],
-        };
-        const result = await this._pool.query(updateBarangQuery);
+		// hitung modal barang
+		await this._hitungModal(
+			jmlBarangSebelum,
+			harga_beli_satuan,
+			result.rows[0].modal,
+			jumlah_dibeli,
+			updatedJmlBarang,
+			id_barang
+		);
 
-        return result.rows[0].id_barang
-    }
+		return result.rows[0].id_barang;
+	}
 
+	async inputBarangTerjual({ tanggal, id_barang, jumlah_dijual, harga_jual }) {
+		// kondisi err check
+		if (!(await this._isBarangExist(id_barang))) {
+			throw new ErrorResponse("id barang tidak ditemukan, tidak dapat menjual barang yang kosong", 404);
+		}
 
-    async inputBarangTerjual({ tanggal, id_barang, jumlah_dijual, harga_jual }) {
-        if (!this.IsBarangExist(id_barang)) {
-            throw new errorResponse('id barang tidak ditemukan, tidak dapat menjual barang yang kosong', 404)
-        }
+		if (jumlah_dijual < 1) {
+			throw new ErrorResponse("jumlah barang tidak boleh kurang dari 1", 400);
+		}
 
-        const updatedJmlBarang = await this.checkJumlahBarang(id_barang) - jumlah_dijual
-        if (updatedJmlBarang < 0) {
-            throw new errorResponse('jumlah barang tidak mencukupi', 400)
-        }
+		const jmlBarangSebelum = await this._checkJumlahBarang(id_barang);
+		const updatedJmlBarang = jmlBarangSebelum - jumlah_dijual;
+		if (updatedJmlBarang < 0) {
+			throw new ErrorResponse("jumlah barang tidak mencukupi", 400);
+		}
 
-        const id_penjualan = `penjualan-${nanoid(16)}`
-        const tambahPenjualanQuery = {
-            text: 'INSERT INTO penjualan_barang VALUES($1, $2, $3, $4, $5) ',
-            values: [id_penjualan, id_barang, harga_jual, jumlah_dijual, tanggal],
-        };
-        await this._pool.query(tambahPenjualanQuery);
+		//tambah penjualan
+		const id_penjualan = `penjualan-${nanoid(16)}`;
+		const tambahPenjualanQuery = {
+			text: "INSERT INTO penjualan_barang VALUES($1, $2, $3, $4, $5) ",
+			values: [id_penjualan, id_barang, harga_jual, jumlah_dijual, tanggal]
+		};
+		await this._pool.query(tambahPenjualanQuery);
 
+		//update jumlah barang
+		const result = await this._updateJmlBarang(updatedJmlBarang, id_barang);
 
-        const updateBarangQuery = {
-            text: 'UPDATE barang SET jumlah = $1 WHERE id_barang = $2 ',
-            values: [updatedJmlBarang, id_barang],
-        };
-        await this._pool.query(updateBarangQuery);
-    }
+		return result.rows[0].id_barang;
+	}
 
+	async inputBiayaOperasional({ tanggal, jenis, total_biaya }) {
+		if (total_biaya < 0) {
+			throw new ErrorResponse("biaya tidak boleh negatif", 400);
+		}
 
-    async inputBiayaOperasional({ tanggal, jenis, total_biaya }) {
-        if (total_biaya < 0) {
-            throw new errorResponse('biaya tidak boleh negatif', 400)
-        }
+		const id_biaya = `operasional-${nanoid(16)}`;
+		const query = {
+			text: "INSERT INTO biaya_operasional VALUES($1, $2, $3, $4) ",
+			values: [id_biaya, jenis, total_biaya, tanggal]
+		};
+		await this._pool.query(query);
+	}
 
-        const id_biaya = `operasional-${nanoid(16)}`
-        const query = {
-            text: 'INSERT INTO biaya_operasional VALUES($1, $2, $3, $4) ',
-            values: [id_biaya, jenis, total_biaya, tanggal],
-        };
-        await this._pool.query(query);
+	async getAllPembelianBarangByDate({ tanggal_awal, tanggal_akhir }) {
+		const query = {
+			text: "SELECT * FROM pembelian_barang WHERE tanggal_beli BETWEEN $1 AND $2",
+			values: [tanggal_awal, tanggal_akhir]
+		};
+		const result = await this._pool.query(query);
 
-    }
+		return result.rows;
+	}
 
-    async getAllPembelianBarangByDate({ tanggal_awal, tanggal_akhir }) {
-        const query = {
-            text: 'SELECT * FROM pembelian_barang WHERE tanggal_beli BETWEEN $1 AND $2',
-            values: [tanggal_awal, tanggal_akhir],
-        };
-        const result = await this._pool.query(query);
+	async getAllPenjualanBarangByDate({ tanggal_awal, tanggal_akhir, search = "" }) {
+		const query = {
+			text: `SELECT barang.nama, 
+			barang.id_barang, 
+			(penjualan_barang.harga_jual * penjualan_barang.jumlah_dijual) as harga_penjualan,
+			penjualan_barang.tanggal_jual
+			FROM penjualan_barang 
+			LEFT JOIN barang ON penjualan_barang.id_barang = barang.id_barang
+			WHERE (barang.nama ILIKE $1 OR barang.id_barang ILIKE $1) AND penjualan_barang.tanggal_jual BETWEEN $2 AND $3  `,
+			values: [`${search}%`, tanggal_awal, tanggal_akhir]
+		};
+		const result = await this._pool.query(query);
 
-        return result.rows
-    }
+		return result.rows;
+	}
 
-    async getAllPenjualanBarangByDate({ tanggal_awal, tanggal_akhir }) {
-        const query = {
-            text: 'SELECT * FROM penjualan_barang WHERE tanggal_jual BETWEEN $1 AND $2',
-            values: [tanggal_awal, tanggal_akhir],
-        };
-        const result = await this._pool.query(query);
+	async getAllBiayaOperasionalByDate({ tanggal_awal, tanggal_akhir }) {
+		const query = {
+			text: "SELECT * FROM biaya_operasional WHERE tanggal_biaya BETWEEN $1 AND $2",
+			values: [tanggal_awal, tanggal_akhir]
+		};
+		const result = await this._pool.query(query);
 
-        return result.rows
-    }
+		return result.rows;
+	}
 
-    async getAllBiayaOperasionalByDate({ tanggal_awal, tanggal_akhir }) {
-        const query = {
-            text: 'SELECT * FROM biaya_operasional WHERE tanggal_biaya BETWEEN $1 AND $2',
-            values: [tanggal_awal, tanggal_akhir],
-        };
-        const result = await this._pool.query(query);
+	async getAllStocks({ search = "" }) {
+		const query = {
+			text: "SELECT * FROM barang WHERE nama ILIKE $1 OR id_barang ILIKE $1 OR supplier ILIKE $1",
+			values: [`${search}%`]
+		};
+		const result = await this._pool.query(query);
 
-        return result.rows
-    }
+		return result.rows;
+	}
 
-    async getAllStocks() {
-        const query = {
-            text: 'SELECT * FROM barang'
-        };
-        const result = await this._pool.query(query);
+	async updateStockById({ id }, { nama, supplier }) {
+		const query = {
+			text: "UPDATE barang SET nama=$1, supplier=$2 WHERE id_barang = $3 RETURNING id_barang",
+			values: [nama, supplier, id]
+		};
+		const result = await this._pool.query(query);
 
-        return result.rows
-    }
+		if (result.rows.length < 1) {
+			throw new ErrorResponse("id barang tidak ditemukan", 404);
+		}
+	}
 
-    async updateStockById({ id_barang }, { nama, supplier }) {
-        const query = {
-            text: 'UPDATE barang SET nama=$1, supplier=$2 WHERE id_barang = $3 RETURNING id_barang',
-            values: [nama, supplier, id_barang],
-        };
-        const result = await this._pool.query(query);
+	async deleteStockById({ id }) {
+		const query = {
+			text: "DELETE FROM barang WHERE id_barang=$1 RETURNING id_barang",
+			values: [id]
+		};
+		const result = await this._pool.query(query);
 
-        if (result.rows.length < 1) {
-            throw new errorResponse('id barang tidak ditemukan', 404)
-        }
-    }
+		if (result.rows < 1) {
+			throw new ErrorResponse("id tidak ditemukan", 404);
+		}
+	}
 
-    async deleteStockById({ id_barang }) {
-        const query = {
-            text: 'DELETE FROM barang WHERE id_barang=$1 RETURNING id_barang',
-            values: [id_barang],
-        };
-        const result = await this._pool.query(query);
+	// ========================================================================== //
+	//
+	// utility
 
-        if (result.rows < 1) {
-            throw new errorResponse('id tidak ditemukan', 404)
-        }
-    }
+	async _isBarangExist(id_barang) {
+		const query = {
+			text: "SELECT id_barang FROM barang WHERE id_barang = $1",
+			values: [id_barang]
+		};
+		const result = await this._pool.query(query);
 
+		if (result.rows.length < 1) {
+			return false;
+		}
 
+		return true;
+	}
 
+	async _checkJumlahBarang(id_barang) {
+		const query = {
+			text: "SELECT jumlah FROM barang WHERE id_barang = $1",
+			values: [id_barang]
+		};
+		const result = await this._pool.query(query);
 
-    // ========================================================================== //
-    // 
-    //utility
+		if (result.rows.length < 1) {
+			return 0;
+		}
 
-    async IsBarangExist(id_barang) {
-        const query = {
-            text: 'SELECT id_barang FROM barang WHERE id_barang = $1',
-            values: [id_barang],
-        };
-        const result = await this._pool.query(query);
+		return result.rows[0].jumlah;
+	}
 
-        if (result.rows.length < 1) {
-            return false
-        }
+	async _updateJmlBarang(updatedJmlBarang, id_barang) {
+		const updateBarangQuery = {
+			text: "UPDATE barang SET jumlah = $1 WHERE id_barang = $2 RETURNING id_barang, modal",
+			values: [updatedJmlBarang, id_barang]
+		};
+		const result = await this._pool.query(updateBarangQuery);
+		return result;
+	}
 
-        return true
-    }
+	async _hitungModal(
+		jmlBarangSebelum,
+		hargaSatuanTambahan,
+		hargaSatuanSebelum,
+		jumlahBarangTambahan,
+		totalJumlahBarang,
+		id_barang
+	) {
+		let modal = 0;
 
-    async checkJumlahBarang(id_barang) {
-        const query = {
-            text: 'SELECT jumlah FROM barang WHERE id_barang = $1',
-            values: [id_barang],
-        };
-        const result = await this._pool.query(query);
+		if (jmlBarangSebelum == 0) {
+			modal = hargaSatuanTambahan;
+		} else {
+			const modalSebelum = hargaSatuanSebelum * jmlBarangSebelum;
+			const modalTambahan = hargaSatuanTambahan * jumlahBarangTambahan;
+			//* (modalSebelum * jmlSebelum + harga_beli_satuan * jumlah_dibeli)/updatedJmlBarang  rumus  (7+7+3+3)/4
+			modal = Math.ceil((modalSebelum + modalTambahan) / totalJumlahBarang);
+		}
 
-        if (result.rows.length < 1) {
-            return 0
-        }
+		const updateModalQuery = {
+			text: "UPDATE barang SET modal=$1 WHERE id_barang = $2",
+			values: [modal, id_barang]
+		};
 
-        return result.rows[0].jumlah
-    }
+		await this._pool.query(updateModalQuery);
+	}
 
+	async _cekKepemilikanID(id_barang, nama, supplier) {
+		const cekNamaBarang = {
+			text: "SELECT nama, supplier FROM barang WHERE id_barang = $1",
+			values: [id_barang]
+		};
+		const result = await this._pool.query(cekNamaBarang);
 
+		if ((result.rows[0].nama !== nama, result.rows[0].supplier !== supplier)) {
+			throw new ErrorResponse("id barang telah digunakan oleh barang lain", 400);
+		}
+	}
 }
 
-module.exports = barangService
+module.exports = BarangService;
