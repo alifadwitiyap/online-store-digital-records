@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 
+/**
+ * An anchor link with custom styles to go back to main menu.
+ */
 function BackToMenu() {
   return (
     <Link

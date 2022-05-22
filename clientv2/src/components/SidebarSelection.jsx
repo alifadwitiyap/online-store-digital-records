@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+/**
+ * A custom button for navigation. Made for sidebar selections.
+ */
 function SidebarSelection({ text, path }) {
   return (
     <Link
@@ -14,7 +17,13 @@ function SidebarSelection({ text, path }) {
 }
 
 SidebarSelection.propTypes = {
+  /**
+   * Selection's text/label.
+   */
   text: PropTypes.string.isRequired,
+  /**
+   * A path to redirect to if the button/selection is clicked.
+   */
   path: PropTypes.string.isRequired,
 };
 

@@ -3,6 +3,9 @@ import { FaQuestionCircle } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import Title from './Title';
 
+/**
+ * A button that displays a modal to show help on how to use the app.
+ */
 function Help() {
   const showModal = () => {
     const modal = document.querySelector('#help-modal');

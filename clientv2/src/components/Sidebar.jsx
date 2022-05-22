@@ -8,6 +8,9 @@ import navSelections from '../data/navSelections';
 import { useDispatch } from 'react-redux';
 import { logout } from '../features/userSlice';
 
+/**
+ * A sidebar for navigation.
+ */
 function Sidebar() {
   const [isOpened, setIsOpened] = useState(false);
   const dispatch = useDispatch();
