@@ -7,12 +7,16 @@ const colors = require("colors");
 /*eslint-enable */
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const errorController = require("./middleware/errorController");
 
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+//cors
+app.use(cors());
 
 //read json
 app.use(express.json());
