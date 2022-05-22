@@ -2,7 +2,7 @@ const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-class BarangService {
+class barangService {
 	constructor() {
 		this._pool = new Pool({
 			connectionString: process.env.DATABASE_URL
@@ -241,4 +241,4 @@ class BarangService {
 	}
 }
 
-module.exports = BarangService;
+module.exports = barangService;

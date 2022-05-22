@@ -1,26 +1,26 @@
 const express = require("express");
-const UsersHandler = require("../handler/UsersHandler");
+const usersHandler = require('../handler/usersHandler');
 const protect = require("../middleware/authController");
 
 /*eslint-disable */
-const UsersRouter = express.Router();
-const handler = new UsersHandler();
+const usersRouter = express.Router();
+const handler = new usersHandler();
 /*eslint-enable */
 
-UsersRouter
+usersRouter
 	.route("/register")
 	.post(handler.postRegisterHandler);
 
-UsersRouter
+usersRouter
 	.route("/login")
 	.post(handler.postLoginUserHandler);
 
-UsersRouter
+usersRouter
 	.route("/logout")
 	.delete(protect, handler.deleteLogoutUserHandler);
 
-UsersRouter
+usersRouter
 	.route("/:id")
 	.delete(protect, handler.deleteUserHandlerById);
 
-module.exports = UsersRouter;
+module.exports = usersRouter;

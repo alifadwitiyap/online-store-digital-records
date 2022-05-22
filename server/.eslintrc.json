@@ -5,7 +5,6 @@
         "es2021": true
     },
     "plugins": [
-        "filenames"
     ],
     "extends": ["eslint:recommended"],
     "parserOptions": {
@@ -21,8 +20,7 @@
             "error",
             "always"
         ],
-        "filenames/match-exported": [ 2, "pascal" ],
-        "new-cap": ["error", { "newIsCap": true }],
+        "new-cap": ["error", { "newIsCap": false }],
         "no-confusing-arrow": [
             "error",
             { "allowParens": true, "onlyOneSimpleParam": false }

@@ -1,29 +1,30 @@
 const express = require("express");
-const BarangHandler = require("../handler/BarangHandler");
 const protect = require("../middleware/authController");
+const barangHandler = require('../handler/barangHandler');
+
 
 /*eslint-disable */
-const BarangRouter = express.Router();
-const handler = new BarangHandler();
+const barangRouter = express.Router();
+const handler = new barangHandler();
 /*eslint-enable */
 
-BarangRouter
+barangRouter
 	.route("/stock")
-	.get( protect,handler.getAllStocks)
+	.get(protect,handler.getAllStocks)
 	.post(protect, handler.postInputBarang);
 
-BarangRouter
+barangRouter
 	.route("/stock/:id")
 	.put(protect, handler.updateStockById)
 	.delete(protect, handler.deleteStockById);
 
-BarangRouter
+barangRouter
 	.route("/biayaOperasional")
 	.post(protect, handler.postBiayaOperasional);
 
-BarangRouter
+barangRouter
 	.route("/Penjualan")
 	.get( protect, handler.getAllPenjualanBarangByDate)
 	.post(protect, handler.postInputPenjualan);
 
-module.exports = BarangRouter;
+module.exports = barangRouter;

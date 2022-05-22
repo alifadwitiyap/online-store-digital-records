@@ -1,10 +1,12 @@
+const usersRouter = require("./router/usersRouter");
+const barangRouter = require("./router/barangRouter");
+const laporanRouter = require("./router/laporanRouter");
+
 /*eslint-disable */
 const colors = require("colors");
 /*eslint-enable */
 const express = require("express");
 const morgan = require("morgan");
-const UsersRouter = require("./router/UsersRouter");
-const barangRouter = require("./router/barangRouter");
 const errorController = require("./middleware/errorController");
 
 require("dotenv").config();
@@ -21,8 +23,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //router
-app.use("/users", UsersRouter);
+app.use("/users", usersRouter);
 app.use("/barang", barangRouter);
+app.use("/laporan", laporanRouter);
 app.use(errorController);
 
 //main run server

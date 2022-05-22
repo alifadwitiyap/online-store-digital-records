@@ -1,11 +1,11 @@
-const BarangService = require("../service/BarangService");
+const barangService = require("../service/barangService");
 const errorCatcher = require("../middleware/errorCatcher");
 
 require("dotenv").config();
 
-class BarangHandler {
+class barangHandler {
 	constructor() {
-		this._service = new BarangService();
+		this._service = new barangService();
 
 		// Make promise to send err to next and binding "this"
 		this.postInputBarang = errorCatcher(this.postInputBarang.bind(this));
@@ -91,4 +91,4 @@ class BarangHandler {
 	}
 }
 
-module.exports = BarangHandler;
+module.exports = barangHandler;

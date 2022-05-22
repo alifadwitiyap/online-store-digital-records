@@ -1,11 +1,11 @@
-const UsersService = require("../service/UsersService");
+const usersService = require("../service/usersService");
 const errorCatcher = require("../middleware/errorCatcher");
 
 require("dotenv").config();
 
-class UsersHandler {
+class usersHandler {
 	constructor() {
-		this._service = new UsersService();
+		this._service = new usersService();
 
 		// make promise to send err to next and binding "this"
 		this.postRegisterHandler = errorCatcher(this.postRegisterHandler.bind(this));
@@ -54,4 +54,4 @@ class UsersHandler {
 	}
 }
 
-module.exports = UsersHandler;
+module.exports = usersHandler;

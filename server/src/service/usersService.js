@@ -5,7 +5,7 @@ const ErrorResponse = require("../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
 const NodeCache = require("node-cache");
 
-class UsersService {
+class usersService {
 	static token = new NodeCache();
 	constructor() {
 		this._pool = new Pool({
@@ -24,7 +24,7 @@ class UsersService {
 
 		const result = await this._pool.query(query);
 
-		const data = result.rows[0];
+		const [data] = result.rows;
 		delete data.password;
 
 		return data;
@@ -57,7 +57,7 @@ class UsersService {
 			throw new ErrorResponse("Username tidak ditemukan", 404);
 		}
 
-		const data = result.rows[0];
+		const [data] = result.rows;
 		const isMatch = await bcrypt.compare(password, data.password);
 		delete data.password;
 
@@ -66,14 +66,14 @@ class UsersService {
 		}
 
 		data.token = await jwt.sign({ id_akun: data.id_akun }, process.env.JWT_SECRET_KEY);
-		UsersService.token.set(data.token, true, 60 * 60);
+		usersService.token.set(data.token, true, 60 * 60);
 
 		return data;
 	}
 
 	async logoutUser({ authorization }) {
-		UsersService.token.del(authorization.split(" ")[1]);
+		usersService.token.del(authorization.split(" ")[1]);
 	}
 }
 
-module.exports = UsersService;
+module.exports = usersService;
