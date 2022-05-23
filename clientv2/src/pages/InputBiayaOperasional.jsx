@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { notifyError, notifySuccess } from '../utils/notify';
 import BackToMenu from '../components/BackToMenu';
 
-function InputBarangBaru() {
+function InputBiayaOperasional() {
   const [auth, isAuthenticated] = useAuth();
   const [formData, setFormData] = useState({
     tanggal: new Date(),
@@ -119,4 +119,4 @@ function InputBarangBaru() {
   );
 }
 
-export default InputBarangBaru;
+export default InputBiayaOperasional;
