@@ -29,6 +29,10 @@ body {
     @apply appearance-none relative block w-full px-3 py-2 border-b-2 border-gray-400 placeholder-gray-400 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm;
   }
 
+  .dropdown {
+    @apply relative block w-full px-3 py-2 border-b-2 border-gray-400 placeholder-gray-400 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm;
+  }
+
   .table { @apply table-fixed w-full; }
   .table th { @apply pt-4 pb-4 text-white font-normal bg-purple-600; }
   .table td { @apply pt-3 pb-3 text-center; }
