@@ -1,16 +1,15 @@
-const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const bcrypt = require("bcrypt");
 const ErrorResponse = require("../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
 const NodeCache = require("node-cache");
+const DBPool = require("../utils/DBPool");
 
+//TODO buat method get all user
 class usersService {
 	static token = new NodeCache();
 	constructor() {
-		this._pool = new Pool({
-			connectionString: process.env.DATABASE_URL
-		});
+		this._pool = DBPool.get();
 	}
 
 	async registerUser({ username, password, nama, role }) {
@@ -73,6 +72,15 @@ class usersService {
 
 	async logoutUser({ authorization }) {
 		usersService.token.del(authorization.split(" ")[1]);
+	}
+
+	async getUsers() {
+		const query = {
+			text: "SELECT id_akun,username,nama,role from akun "
+		};
+		const result = await this._pool.query(query);
+
+		return result.rows;
 	}
 }
 

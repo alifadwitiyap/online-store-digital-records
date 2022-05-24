@@ -20,6 +20,10 @@ usersRouter
 	.delete(protect, handler.deleteLogoutUserHandler);
 
 usersRouter
+	.route("/")
+	.get(handler.getUsers);
+
+usersRouter
 	.route("/:id")
 	.delete(protect, handler.deleteUserHandlerById);
 

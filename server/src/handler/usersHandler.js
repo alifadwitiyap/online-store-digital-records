@@ -12,6 +12,7 @@ class usersHandler {
 		this.deleteUserHandlerById = errorCatcher(this.deleteUserHandlerById.bind(this));
 		this.postLoginUserHandler = errorCatcher(this.postLoginUserHandler.bind(this));
 		this.deleteLogoutUserHandler = errorCatcher(this.deleteLogoutUserHandler.bind(this));
+		this.getUsers = errorCatcher(this.getUsers.bind(this));
 	}
 
 	// @desc add user
@@ -37,6 +38,17 @@ class usersHandler {
 	// @route POST /users/login
 	async postLoginUserHandler(req, res) {
 		const data = await this._service.loginUser(req.body);
+		res.status(200).json({
+			isSuccess: true,
+			data
+		});
+	}
+
+	// @desc  get all user
+	// @route POST /users/
+	async getUsers(req, res) {
+		const data = await this._service.getUsers();
+
 		res.status(200).json({
 			isSuccess: true,
 			data

@@ -1,16 +1,10 @@
-const { Pool } = require("pg");
-require("dotenv").config({ path: "../../.env" });
-
-// const { nanoid } = require("nanoid");
-// const ErrorResponse = require("../utils/ErrorResponse");
+const DBPool = require("../utils/DBPool");
 
 //* hitung keuntungannya dengan harga_jual*byk_jual - harga_modal*byk_jual
 
 class LaporanService {
 	constructor() {
-		this._pool = new Pool({
-			connectionString: process.env.DATABASE_URL
-		});
+		this._pool = DBPool.get();
 	}
 
 	async keuntunganPenjualanKotor({ tanggal }) {

@@ -1,12 +1,10 @@
-const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const ErrorResponse = require("../utils/ErrorResponse");
+const DBPool = require("../utils/DBPool");
 
 class barangService {
 	constructor() {
-		this._pool = new Pool({
-			connectionString: process.env.DATABASE_URL
-		});
+		this._pool = DBPool.get();
 	}
 	// add barang
 	async inputBarangBaru({ tanggal, id_barang, nama, harga_beli_satuan, supplier, jumlah_dibeli }) {
@@ -90,16 +88,6 @@ class barangService {
 		await this._pool.query(query);
 	}
 
-	async getAllPembelianBarangByDate({ tanggal_awal, tanggal_akhir }) {
-		const query = {
-			text: "SELECT * FROM pembelian_barang WHERE tanggal_beli BETWEEN $1 AND $2",
-			values: [tanggal_awal, tanggal_akhir]
-		};
-		const result = await this._pool.query(query);
-
-		return result.rows;
-	}
-
 	async getAllPenjualanBarangByDate({ tanggal_awal, tanggal_akhir, search = "" }) {
 		const query = {
 			text: `SELECT barang.nama, 
@@ -110,16 +98,6 @@ class barangService {
 			LEFT JOIN barang ON penjualan_barang.id_barang = barang.id_barang
 			WHERE (barang.nama ILIKE $1 OR barang.id_barang ILIKE $1) AND penjualan_barang.tanggal_jual BETWEEN $2 AND $3  `,
 			values: [`${search}%`, tanggal_awal, tanggal_akhir]
-		};
-		const result = await this._pool.query(query);
-
-		return result.rows;
-	}
-
-	async getAllBiayaOperasionalByDate({ tanggal_awal, tanggal_akhir }) {
-		const query = {
-			text: "SELECT * FROM biaya_operasional WHERE tanggal_biaya BETWEEN $1 AND $2",
-			values: [tanggal_awal, tanggal_akhir]
 		};
 		const result = await this._pool.query(query);
 
