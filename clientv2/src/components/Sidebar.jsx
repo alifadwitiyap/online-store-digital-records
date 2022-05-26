@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Title from './Title';
 import SidebarSelection from './SidebarSelection';
 import navSelections from '../data/navSelections';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/userSlice';
 
 /**
@@ -13,6 +13,7 @@ import { logout } from '../features/userSlice';
  */
 function Sidebar() {
   const [isOpened, setIsOpened] = useState(false);
+  const { role } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,7 +39,7 @@ function Sidebar() {
             <BsPersonCircle className="text-white text-8xl my-4" />
             <Title className="text-xl text-white">Owner</Title>
             <div className="mt-8 h-80 overflow-y-scroll no-scrollbar">
-              {navSelections.map(({ text, path }) => (
+              {navSelections[role].map(({ text, path }) => (
                 <SidebarSelection key={text} text={text} path={path} />
               ))}
             </div>

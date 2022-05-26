@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Title from '../components/Title';
 import Help from '../components/Help';
 import MenuSelection from '../components/MenuSelection';
@@ -8,6 +9,7 @@ import useAuth from '../utils/useAuth';
 
 function Home() {
   const [auth, isAuthenticated] = useAuth();
+  const { role } = useSelector((state) => state.user);
 
   useEffect(() => {
     auth();
@@ -24,7 +26,7 @@ function Home() {
         <div className="w-4/5 lg:w-1/4 mb-6">
           <Title className="text-4xl text-black">Selamat Datang di Digital Records</Title>
         </div>
-        {navSelections.map(({ icon, text, path }) => (
+        {navSelections[role].map(({ icon, text, path }) => (
           <MenuSelection key={text} icon={icon} text={text} path={path} />
         ))}
       </div>
