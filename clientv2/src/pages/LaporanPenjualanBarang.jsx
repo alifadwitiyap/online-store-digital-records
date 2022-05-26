@@ -91,7 +91,17 @@ function LaporanPenjualanBarang() {
                 className="input-field"
                 onChange={(e) => setSearchString(e.target.value)}
               />
-              <button type="button" className="btn">Search</button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() =>
+                  dispatch(
+                    loadDataPenjualan(tanggalAwal, tanggalAkhir, searchString)
+                  )
+                }
+              >
+                Search
+              </button>
             </div>
           </div>
           {tableLoading ? (
