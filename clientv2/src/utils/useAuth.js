@@ -1,21 +1,24 @@
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import selections from '../data/navSelections';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { token } = useSelector((state) => state.user);
+  const { token, role } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // TODO: add role checking
+  const currentPage = location.pathname;
+  const roleAllowed = selections[role].some((page) => page.path === currentPage);
 
   const auth = useCallback(() => {
-    if (!token) {
-      navigate('/login');
-    } else {
+    if(token && (currentPage === '/' || roleAllowed)) {
       setIsAuthenticated(true);
+    } else {
+      navigate('/login');
     }
-  }, [navigate, token]);
+  }, [navigate, token, currentPage, roleAllowed]);
 
   return [auth, isAuthenticated];
 };
