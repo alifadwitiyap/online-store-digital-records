@@ -16,7 +16,7 @@ function InputBarangBaru() {
     tanggal: new Date(),
     id_barang: '',
     nama: '',
-    harga_beli: 0,
+    harga_beli_satuan: 0,
     supplier: '',
     jumlah_dibeli: 1,
   });
@@ -47,7 +47,7 @@ function InputBarangBaru() {
         ...formData,
         tanggal: convertDateToString(formData.tanggal),
       };
-      await Axios.post('/barang/inputBarang', data, {
+      await Axios.post('/barang/stock', data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -123,7 +123,7 @@ function InputBarangBaru() {
               </label>
               <input
                 type="number"
-                name="harga_beli"
+                name="harga_beli_satuan"
                 className="input-field"
                 value={formData.harga_beli}
                 placeholder="cth: 100.000"
