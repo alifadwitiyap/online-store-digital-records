@@ -20,7 +20,7 @@ function Sidebar() {
   className = `${className} ${isOpened ? 'translate-x-0' : '-translate-x-full'}`;
 
   return (
-    <div className="fixed">
+    <div className="fixed z-10">
       <div className="relative">
         <AiOutlineMenu
           className="absolute text-4xl top-4 left-4 text-purple-600 hover:text-purple-800 hover:cursor-pointer"
