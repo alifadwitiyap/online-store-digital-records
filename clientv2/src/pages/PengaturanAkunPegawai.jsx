@@ -73,7 +73,7 @@ function PengaturanAkunPegawai() {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col items-center h-screen">
+      <div className="flex flex-col items-center h-screen mb-10">
         <div className="w-4/5 lg:w-1/4 my-10">
           <Title className="text-2xl text-black mb-8">Akun</Title>
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
