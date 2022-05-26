@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Title from '../components/Title';
 import Sidebar from '../components/Sidebar';
+import Table from '../components/Table';
+import TableRow from '../components/TableRow';
 import BackToMenu from '../components/BackToMenu';
 import useAuth from '../utils/useAuth';
-import { convertDateToString } from '../utils/dateConversion';
 import { notifyError, notifySuccess } from '../utils/notify';
 import Axios from '../utils/axios';
-
-// TODO: getAllUsers belum ada, jadi table nya belum bisa dikerjain
+import { getAccounts } from '../features/adminSlice';
 
 function PengaturanAkunPegawai() {
   const [auth, isAuthenticated] = useAuth();
@@ -21,11 +21,16 @@ function PengaturanAkunPegawai() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { token } = useSelector((state) => state.user);
+  const { isLoading: tableLoading, accounts } = useSelector(
+    (state) => state.admin
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     auth();
     if (!isAuthenticated) return;
-  }, [auth, isAuthenticated]);
+    dispatch(getAccounts());
+  }, [auth, isAuthenticated, dispatch]);
 
   const onFieldChange = (e) => {
     setFormData((prev) => ({
@@ -38,27 +43,38 @@ function PengaturanAkunPegawai() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const data = {
-        ...formData,
-        tanggal: convertDateToString(formData.tanggal),
-      };
-      await Axios.post('/users/register', data, {
+      await Axios.post('/users/register', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       notifySuccess('Akun berhasil dibuat');
+      dispatch(getAccounts());
     } catch (error) {
       notifyError('Akun gagal dibuat');
     }
     setIsLoading(false);
   };
 
+  const deleteHandler = async (id) => {
+    try {
+      await Axios.delete(`/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      notifySuccess('Akun berhasil dihapus');
+      dispatch(getAccounts());
+    } catch (error) {
+      notifyError('Akun gagal dihapus');
+    }
+  };
+
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col gap-5 justify-center items-center h-screen">
-        <div className="w-4/5 lg:w-1/4 mb-6">
+      <div className="flex flex-col items-center h-screen">
+        <div className="w-4/5 lg:w-1/4 my-10">
           <Title className="text-2xl text-black mb-8">Akun</Title>
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <div className="mb-4 w-full">
@@ -126,6 +142,31 @@ function PengaturanAkunPegawai() {
             )}
           </form>
           <BackToMenu />
+        </div>
+        <div className="w-4/6">
+          {tableLoading ? (
+            <h1>loading accounts...</h1>
+          ) : (
+            <Table columnNames={['Nama', 'Username', 'Role', 'Action']}>
+              {accounts.map((data) => (
+                <TableRow
+                  key={data.id_akun}
+                  data={[
+                    data.nama,
+                    data.username,
+                    data.role,
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => deleteHandler(data.id_akun)}
+                    >
+                      Hapus
+                    </button>,
+                  ]}
+                />
+              ))}
+            </Table>
+          )}
         </div>
       </div>
     </>
