@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Axios from '../utils/axios';
 
 const user = localStorage.getItem('user');
 let initialState;
@@ -28,6 +29,11 @@ export const userSlice = createSlice({
       localStorage.setItem('user', JSON.stringify(action.payload));
     },
     logout: (state) => {
+      Axios.delete('/users/logout', {
+        headers: {
+          Authorization: `Bearer ${state.token}`
+        }
+      });
       state.id_akun = '';
       state.username = '';
       state.nama = '';
