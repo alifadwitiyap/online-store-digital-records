@@ -12,9 +12,8 @@ class laporanHandler {
 	}
 
 	async kentunganPenjualanBersihHandler(req, res) {
-		const [dataPenjualanKotor, dataBiayaOperasional] = await this._service.keuntunganPenjualanBersih(
-			req.query
-		);
+		const [dataPenjualanKotor, dataBiayaOperasional, dataPembelian] =
+			await this._service.keuntunganPenjualanBersih(req.query);
 
 		let totalKeuntunganKotor = 0;
 		let totalBiayaOperasional = 0;
@@ -33,7 +32,8 @@ class laporanHandler {
 			totalKeuntunganKotor,
 			totalBiayaOperasional,
 			dataPenjualanKotor,
-			dataBiayaOperasional
+			dataBiayaOperasional,
+			dataPembelian
 		});
 	}
 

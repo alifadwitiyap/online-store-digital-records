@@ -2,13 +2,15 @@ const { nanoid } = require("nanoid");
 const bcrypt = require("bcrypt");
 const ErrorResponse = require("../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
-const NodeCache = require("node-cache");
 const DBPool = require("../utils/DBPool");
+const cacheService = require('./cacheService');
 
-//TODO buat method get all user
+
+
+
 class usersService {
-	static token = new NodeCache();
 	constructor() {
+		this._token = new cacheService();
 		this._pool = DBPool.get();
 	}
 
@@ -65,13 +67,13 @@ class usersService {
 		}
 
 		data.token = await jwt.sign({ id_akun: data.id_akun }, process.env.JWT_SECRET_KEY);
-		usersService.token.set(data.token, true, 60 * 60);
+		await this._token.set(data.token, "true", 20*60 );
 
 		return data;
 	}
 
 	async logoutUser({ authorization }) {
-		usersService.token.del(authorization.split(" ")[1]);
+		this._token.delete(authorization.split(" ")[1]);
 	}
 
 	async getUsers() {

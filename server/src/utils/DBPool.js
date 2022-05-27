@@ -2,6 +2,8 @@ const { Pool } = require("pg");
 /*eslint-disable */
 const colors = require("colors");
 /*eslint-enable */
+require("dotenv").config({ path: "../../.env" });
+
 let pool;
 module.exports = {
 	get: () => {

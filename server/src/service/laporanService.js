@@ -16,7 +16,9 @@ class LaporanService {
 
 		const biayaOperasional = await this._getBiayaOperasional(tanggal_awal, tanggal_akhir);
 
-		return [penjualanKotor, biayaOperasional];
+		const dataPembelian = await this._getPembelian(tanggal_awal, tanggal_akhir);
+
+		return [penjualanKotor, biayaOperasional, dataPembelian];
 	}
 
 	// ==========================================================================
@@ -31,10 +33,20 @@ class LaporanService {
 		return result.rows;
 	}
 
+	async _getPembelian(tanggal_awal, tanggal_akhir) {
+		const query = {
+			text: `SELECT * FROM pembelian_barang WHERE tanggal_beli BETWEEN $1 AND $2`,
+			values: [tanggal_awal, tanggal_akhir]
+		};
+
+		const result = await this._pool.query(query);
+		return result.rows;
+	}
+
 	async _getPenjualanKotor(tanggal_awal, tanggal_akhir) {
 		const query = {
 			text: `
-			SELECT *, (x.harga_modal-x.harga_jual)::INTEGER as keuntungan FROM
+			SELECT *, (x.harga_jual-x.harga_modal)::INTEGER as keuntungan FROM
 			(
 			SELECT barang.id_barang,barang.nama,SUM(penjualan_barang.harga_jual * penjualan_barang.jumlah_dijual)::INTEGER as harga_jual, SUM(barang.modal * penjualan_barang.jumlah_dijual)::INTEGER as harga_modal FROM penjualan_barang 
 			LEFT JOIN barang ON barang.id_barang = penjualan_barang.id_barang

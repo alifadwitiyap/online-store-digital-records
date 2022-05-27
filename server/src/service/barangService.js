@@ -1,6 +1,7 @@
 const { nanoid } = require("nanoid");
 const ErrorResponse = require("../utils/ErrorResponse");
 const DBPool = require("../utils/DBPool");
+const fuzzyService = require("./fuzzyService");
 
 class barangService {
 	constructor() {
@@ -71,6 +72,8 @@ class barangService {
 
 		//update jumlah barang
 		const result = await this._updateJmlBarang(updatedJmlBarang, id_barang);
+		const fs = new fuzzyService();
+		await fs.updateScore(id_barang);
 
 		return result.rows[0].id_barang;
 	}

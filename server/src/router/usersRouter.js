@@ -21,7 +21,7 @@ usersRouter
 
 usersRouter
 	.route("/")
-	.get(handler.getUsers);
+	.get(protect,handler.getUsers);
 
 usersRouter
 	.route("/:id")
