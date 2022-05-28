@@ -4,6 +4,7 @@ import adminReducer from '../features/adminSlice';
 import laporanSisaStokReducer from '../features/laporanSisaStokSlice';
 import laporanPenjualanReducer from '../features/laporanPenjualanSlice';
 import laporanKeuntunganKotorReducer from '../features/laporanKeuntunganKotorSlice';
+import laporanKeuntunganBersihReducer from '../features/laporanKeuntunganBersihSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     stok: laporanSisaStokReducer,
     penjualan: laporanPenjualanReducer,
     keuntunganKotor: laporanKeuntunganKotorReducer,
+    keuntunganBersih: laporanKeuntunganBersihReducer,
   },
 });
 
