@@ -4,6 +4,7 @@ import { calcCashflowKeuntunganBersih } from '../utils/calc';
 
 const initialState = {
   isLoading: false,
+  hasLoadedBefore: false,
   totalKeuntunganKotor: 0,
   totalKeuntunganBersih: 0,
   totalBiayaOperasional: 0,
@@ -25,6 +26,7 @@ export const laporanKeuntunganBersihSlice = createSlice({
       state.totalBiayaOperasional = action.payload.totalBiayaOperasional;
       state.dataBiayaOperasional =  action.payload.dataBiayaOperasional;
       state.dataCashFlow = action.payload.dataCashFlow;
+      state.hasLoadedBefore = true;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -43,7 +45,7 @@ export const loadDataKeuntunganBersih = (
   timePeriodData
 ) => {
   return async (dispatch, getState) => {
-    if (getState().keuntunganBersih.dataCashFlow.cnt === 0)
+    if (!getState().keuntunganBersih.hasLoadedBefore)
       dispatch(setLoading(true));
 
     const user = localStorage.getItem('user');

@@ -12,13 +12,13 @@ const daysInMonth = (month, year) => new Date(year, month, 0).getDate();
 function calcBulanan(timeDetails, pembelian, penjualan, biayaOperasional) {
   const { bulan, tahun } = timeDetails;
 
-  let cnt = daysInMonth(bulan, tahun);
+  let cnt = daysInMonth(bulan + 1, tahun);
   let cashIn = new Array(cnt).fill(0);
   let cashOut = new Array(cnt).fill(0);
 
   pembelian.forEach(({tanggal_beli, harga_beli, jumlah_dibeli}) => {
     const hari = parseInt(tanggal_beli.split('-')[2]) - 1;
-    cashOut[hari] += harga_beli*jumlah_dibeli;
+    cashOut[hari] -= harga_beli*jumlah_dibeli;
   });
 
   penjualan.forEach(({tanggal_jual, harga_jual, jumlah_dijual}) => {
@@ -28,7 +28,7 @@ function calcBulanan(timeDetails, pembelian, penjualan, biayaOperasional) {
 
   biayaOperasional.forEach(({tanggal_biaya, total_biaya}) => {
     const hari = parseInt(tanggal_biaya.split('-')[2]) - 1;
-    cashOut[hari] += total_biaya;
+    cashOut[hari] -= total_biaya;
   });
 
   return { cnt, cashIn, cashOut };
@@ -41,7 +41,7 @@ function calcTahunan(pembelian, penjualan, biayaOperasional) {
 
   pembelian.forEach(({tanggal_beli, harga_beli, jumlah_dibeli}) => {
     const bulan = parseInt(tanggal_beli.split('-')[1]) - 1;
-    cashOut[bulan] += harga_beli*jumlah_dibeli;
+    cashOut[bulan] -= harga_beli*jumlah_dibeli;
   });
 
   penjualan.forEach(({tanggal_jual, harga_jual, jumlah_dijual}) => {
@@ -51,7 +51,7 @@ function calcTahunan(pembelian, penjualan, biayaOperasional) {
 
   biayaOperasional.forEach(({tanggal_biaya, total_biaya}) => {
     const bulan = parseInt(tanggal_biaya.split('-')[1]) - 1;
-    cashOut[bulan] += total_biaya;
+    cashOut[bulan] -= total_biaya;
   });
 
   return { cnt, cashIn, cashOut };

@@ -9,12 +9,13 @@ import MONTHS from '../data/months';
 import { loadDataKeuntunganBersih } from '../features/laporanKeuntunganBersihSlice';
 import { convertDateToString } from '../utils/dateConversion';
 import { daysInMonth } from '../utils/calc';
+import ChartCashFlow from '../components/ChartCashFlow';
 
 function LaporanKeuntunganBersih() {
   const [timePeriodChosen, setTimePeriodChosen] = useState(0);
   const [formDataHarian, setFormDataHarian] = useState({ tanggal: new Date() });
   const [formDataBulanan, setFormDataBulanan] = useState({
-    bulan: 1,
+    bulan: 0,
     tahun: 2022,
   });
   const [formDataTahunan, setFormDataTahunan] = useState({ tahun: 2022 });
@@ -28,6 +29,7 @@ function LaporanKeuntunganBersih() {
     totalBiayaOperasional,
     dataBiayaOperasional,
     dataCashFlow,
+    hasLoadedBefore
   } = useSelector((state) => state.keuntunganBersih);
 
   const formHarian = () => {
@@ -185,6 +187,9 @@ function LaporanKeuntunganBersih() {
             </button>
           )}
         </form>
+      </div>
+      <div className="w-4/6">
+        {(timePeriodChosen !== 0 && hasLoadedBefore) && <ChartCashFlow data={dataCashFlow} />}
       </div>
       <div className="w-4/6">
         {tableLoading ? (
