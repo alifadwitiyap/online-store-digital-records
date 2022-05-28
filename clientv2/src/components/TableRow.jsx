@@ -4,9 +4,13 @@ import Button from './Button';
 /**
  * Custom table row (normal).
  */
-function TableRow({ data, isSecondary }) {
+function TableRow({ data, isSecondary, isTotal }) {
+  let className = "";
+  if (isSecondary) className = 'text-gray-500 text-sm';
+  if (isTotal) className = 'text-white font-normal bg-purple-600';
+
   return (
-    <tr className={isSecondary ? 'text-gray-500 text-sm' : ''}>
+    <tr className={className}>
       {data.map((d, idx) => (
         <td key={idx}>{d}</td>
       ))}

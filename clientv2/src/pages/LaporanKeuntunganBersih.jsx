@@ -199,7 +199,7 @@ function LaporanKeuntunganBersih() {
                 d.total_biaya,
               ])}
             />
-            <TableRow data={['Keuntungan Bersih', totalKeuntunganBersih]} />
+            <TableRow data={['Keuntungan Bersih', totalKeuntunganBersih]} isTotal />
           </Table>
         )}
       </div>
