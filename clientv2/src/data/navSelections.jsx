@@ -57,8 +57,9 @@ const data = [
 const rolesData = {
   'admin': [7],
   'pegawai': [1, 2, 3, 4, 5],
-  'owner': [1, 2, 3, 4, 5, 6]
-}
+  'owner': [1, 2, 3, 4, 5, 6],
+  '': [],
+};
 
 const selections = {};
 Object.keys(rolesData).forEach((role) => {
