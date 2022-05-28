@@ -8,6 +8,7 @@ import InputBarangTerjual from './pages/InputBarangTerjual';
 import InputBiayaOperasional from './pages/InputBiayaOperasional';
 import LaporanSisaStokBarang from './pages/LaporanSisaStokBarang';
 import LaporanPenjualanBarang from './pages/LaporanPenjualanBarang';
+import LaporanKeuntungan from './pages/LaporanKeuntungan';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/input-biaya-operasional" element={<InputBiayaOperasional />} />
           <Route path="/laporan-sisa-stok" element={<LaporanSisaStokBarang />} />
           <Route path="/laporan-penjualan" element={<LaporanPenjualanBarang />} />
+          <Route path="/laporan-keuntungan" element={<LaporanKeuntungan />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
