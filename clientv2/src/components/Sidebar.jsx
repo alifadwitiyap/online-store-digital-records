@@ -37,7 +37,7 @@ function Sidebar() {
               Online Store Digital Records
             </Title>
             <BsPersonCircle className="text-white text-8xl my-4" />
-            <Title className="text-xl text-white">Owner</Title>
+            <Title className="text-xl text-white">{role.charAt(0).toUpperCase() + role.slice(1)}</Title>
             <div className="mt-8 h-80 overflow-y-scroll no-scrollbar">
               {navSelections[role].map(({ text, path }) => (
                 <SidebarSelection key={text} text={text} path={path} />
