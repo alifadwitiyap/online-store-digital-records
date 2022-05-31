@@ -18,7 +18,9 @@ class LaporanService {
 
 		const dataPembelian = await this._getPembelian(tanggal_awal, tanggal_akhir);
 
-		return [penjualanKotor, biayaOperasional, dataPembelian];
+		const dataPenjualan = await this._getPenjualan(tanggal_awal, tanggal_akhir);
+
+		return [penjualanKotor, biayaOperasional, dataPembelian, dataPenjualan];
 	}
 
 	// ==========================================================================
@@ -26,6 +28,16 @@ class LaporanService {
 	async _getBiayaOperasional(tanggal_awal, tanggal_akhir) {
 		const query = {
 			text: `SELECT * FROM biaya_operasional WHERE tanggal_biaya BETWEEN $1 AND $2`,
+			values: [tanggal_awal, tanggal_akhir]
+		};
+
+		const result = await this._pool.query(query);
+		return result.rows;
+	}
+
+	async _getPenjualan(tanggal_awal, tanggal_akhir) {
+		const query = {
+			text: `SELECT * FROM penjualan_barang WHERE tanggal_jual BETWEEN $1 AND $2`,
 			values: [tanggal_awal, tanggal_akhir]
 		};
 

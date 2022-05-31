@@ -12,13 +12,14 @@ class laporanHandler {
 	}
 
 	async kentunganPenjualanBersihHandler(req, res) {
-		const [dataPenjualanKotor, dataBiayaOperasional, dataPembelian] =
+		let [PenjualanKotor, dataBiayaOperasional, dataPembelian, dataPenjualan] =
 			await this._service.keuntunganPenjualanBersih(req.query);
 
+		//cari total biaya
 		let totalKeuntunganKotor = 0;
 		let totalBiayaOperasional = 0;
 
-		dataPenjualanKotor.forEach((obj) => {
+		PenjualanKotor.forEach((obj) => {
 			totalKeuntunganKotor = totalKeuntunganKotor + obj.keuntungan;
 		});
 
@@ -26,14 +27,31 @@ class laporanHandler {
 			totalBiayaOperasional = totalBiayaOperasional + obj.total_biaya;
 		});
 
+		//ubah bentuk tanggal
+		dataBiayaOperasional = dataBiayaOperasional.map((obj) => {
+			obj.tanggal_biaya = new Date(obj.tanggal_biaya).toLocaleDateString("fr-CA");
+			return obj;
+		});
+
+		dataPembelian = dataPembelian.map((obj) => {
+			obj.tanggal_beli = new Date(obj.tanggal_beli).toLocaleDateString("fr-CA");
+			return obj;
+		});
+
+		dataPenjualan = dataPenjualan.map((obj) => {
+			obj.tanggal_jual = new Date(obj.tanggal_jual).toLocaleDateString("fr-CA");
+			return obj;
+		});
+
 		res.status(200).json({
 			isSuccess: true,
 			totalKeuntunganBersih: totalKeuntunganKotor - totalBiayaOperasional,
 			totalKeuntunganKotor,
 			totalBiayaOperasional,
-			dataPenjualanKotor,
+			PenjualanKotor,
 			dataBiayaOperasional,
-			dataPembelian
+			dataPembelian,
+			dataPenjualan
 		});
 	}
 
