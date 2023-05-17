@@ -1,5 +1,6 @@
 const redis = require("redis");
 
+
 let staticClient;
 
 class cacheService {
@@ -19,6 +20,7 @@ class cacheService {
 			},
 			password: process.env.REDIS_PASSWORD
 		});
+
 		staticClient.on("error", (error) => {
 			console.error(error);
 		});
@@ -27,7 +29,7 @@ class cacheService {
 	}
 
 	async set(key, value, expirationInSecond = 3600) {
-		await this._client.set(key, value, {
+		await this._client.set(key, JSON.stringify(value), {
 			EX: expirationInSecond
 		});
 	}

@@ -6,15 +6,16 @@
   "scripts": {
     "migrate": "node-pg-migrate",
     "start": "nodemon ./src/Server.js",
-    "up": "node-pg-migrate up",
-    "down": "node-pg-migrate down 5"
+    "up": "node-pg-migrate up  --config-file \"./config.json\"",
+    "down": "node-pg-migrate down 5 --config-file \"./config.json\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
+    "config": "^3.3.9",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "es6-fuzz": "^3.0.5",

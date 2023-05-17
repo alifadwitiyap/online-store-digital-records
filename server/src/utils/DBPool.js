@@ -1,4 +1,7 @@
 const { Pool } = require("pg");
+const fs = require('fs');
+
+
 /*eslint-disable */
 const colors = require("colors");
 /*eslint-enable */
@@ -10,9 +13,15 @@ module.exports = {
 		if (pool) {
 			return pool;
 		}
-
 		pool = new Pool({
-			connectionString: process.env.DATABASE_URL
+			user: process.env.DBUSER,
+			host: process.env.DBHOST,
+			database: process.env.DBNAME,
+			password: process.env.DBPW,
+			port: process.env.DBPORT,
+			ssl: {
+				"rejectUnauthorized": false
+			}
 		});
 		console.log("Database Connected".yellow.bold);
 		return pool;

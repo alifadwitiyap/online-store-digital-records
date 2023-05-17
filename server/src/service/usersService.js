@@ -1,5 +1,5 @@
 const { nanoid } = require("nanoid");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const ErrorResponse = require("../utils/ErrorResponse");
 const jwt = require("jsonwebtoken");
 const DBPool = require("../utils/DBPool");
