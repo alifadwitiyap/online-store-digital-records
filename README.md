@@ -1,7 +1,7 @@
 Tugas besar desain perangkat lunak:
 # online-store-digital-records
 deskripsi:<br>
-sistem manajemen barang untuk memberikan kemudahan kepada owner dalam melakukan pencatatan stok, penjualan, melihat kemajuan toko, dan menentukan barang yang perlu di stok lebih banyak menggunakan AI (fuzzy score) sehingga owner dapat lebih mudah untuk manajemen barang
+sistem manajemen gudang untuk memberikan kemudahan kepada owner dalam melakukan pencatatan stok, penjualan, melihat kemajuan toko, dan menentukan barang yang perlu di stok lebih banyak menggunakan AI (fuzzy score).
 <br><br>website dapat diakses di:<br>
 https://online-store-digital-records-theta.vercel.app/
 
