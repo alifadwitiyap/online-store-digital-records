@@ -1,0 +1,19 @@
+# app server
+HOST=
+PORT=
+NODE_ENV=
+
+#redis
+REDIS_URL=
+
+#database
+
+DBUSER=
+DBHOST=
+DBNAME=
+DBPW=
+DBPORT=
+
+
+JWT_SECRET_KEY=
+PGSSLMODE=require node-pg-migrate up

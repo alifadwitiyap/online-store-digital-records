@@ -10,9 +10,6 @@ RUN npm install
 
 COPY  . /usr/src/app
 
-RUN npm run down
-
-RUN npm run up
 
 EXPOSE 5000
 

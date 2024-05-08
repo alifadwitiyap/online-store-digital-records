@@ -4,8 +4,7 @@ const Trapezoid = require("es6-fuzz/lib/curve/trapezoid");
 const Triangle = require("es6-fuzz/lib/curve/triangle");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-//TODO coba tuning
-//! taro kalo barang dijual itung scorenya
+
 class fuzzyService {
 	constructor() {
 		this._pool = DBPool.get();

@@ -1,0 +1,10 @@
+{
+"user": "user",
+"password": "password",
+"host": "host",
+"port": "port",
+"database": "database",
+"ssl": {
+"rejectUnauthorized": false
+}
+}
